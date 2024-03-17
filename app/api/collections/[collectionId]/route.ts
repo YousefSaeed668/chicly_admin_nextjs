@@ -1,4 +1,5 @@
 import Collection from "@/lib/models/Collection";
+import Product from "@/lib/models/Products";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
@@ -69,8 +70,19 @@ export const DELETE = async (
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
+
     await connectToDB();
     await Collection.findByIdAndDelete(params.collectionId);
+    await Product.updateMany(
+      {
+        collections: params.collectionId,
+      },
+      {
+        $pull: {
+          collections: params.collectionId,
+        },
+      }
+    );
     revalidatePath("/collections");
     return new NextResponse("Collection is Deleted", { status: 200 });
   } catch (err) {
