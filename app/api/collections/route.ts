@@ -38,5 +38,6 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(collections, { status: 200 });
   } catch (err) {
     console.log("[Collection_GET]", err);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
