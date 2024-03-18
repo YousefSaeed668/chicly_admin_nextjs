@@ -32,7 +32,7 @@ const Collections = () => {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <p className="text-heading2-bold ">Collections</p>
         <Button
-          className="bg-blue-1 text-white px-1 sm:px-3"
+          className="bg-blue-1 text-white px-1 sm:px-3  ml-auto"
           onClick={() => rotuer.push("/collections/new")}
         >
           <Plus className="h-4 w-4 mr-1" />
