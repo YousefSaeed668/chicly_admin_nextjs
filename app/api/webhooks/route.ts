@@ -1,12 +1,8 @@
 import Customer from "@/lib/models/Customer";
 import Order from "@/lib/models/Order";
 import { connectToDB } from "@/lib/mongoDB";
+import { stripe } from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
-  typescript: true,
-});
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -76,3 +72,5 @@ export const POST = async (req: NextRequest) => {
     return new NextResponse("failed to create the order", { status: 500 });
   }
 };
+
+export const dynamic = "force-dynamic";

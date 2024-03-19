@@ -1,9 +1,6 @@
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
 
-export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
-  typescript: true,
-});
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -62,3 +59,5 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";
