@@ -1,5 +1,5 @@
 import Collection from "@/lib/models/Collection";
-import Product from "@/lib/models/Products";
+import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
@@ -12,7 +12,12 @@ export const GET = async (
 ) => {
   try {
     await connectToDB();
-    const collection = await Collection.findById(params.collectionId);
+
+    const collection = await Collection.findById(params.collectionId).populate({
+      path: "products",
+      model: Product,
+    });
+
     if (!collection) {
       return new NextResponse(
         JSON.stringify({ message: "Collection not found" }),
@@ -23,7 +28,7 @@ export const GET = async (
     return NextResponse.json(collection, { status: 200 });
   } catch (err) {
     console.log("[collectionId_GET]", err);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal error", { status: 500 });
   }
 };
 export const POST = async (
@@ -90,3 +95,4 @@ export const DELETE = async (
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
+export const dynamic = "force-dynamic";

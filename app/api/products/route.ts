@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { connectToDB } from "@/lib/mongoDB";
 import Collection from "@/lib/models/Collection";
-import Product from "@/lib/models/Products";
+import Product from "@/lib/models/Product";
 
 export const POST = async (req: NextRequest) => {
   try {

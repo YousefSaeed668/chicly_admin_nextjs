@@ -1,5 +1,5 @@
 import Collection from "@/lib/models/Collection";
-import Product from "@/lib/models/Products";
+import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
@@ -23,7 +23,14 @@ export const GET = async (
       );
     }
 
-    return NextResponse.json(product, { status: 200 });
+    return new NextResponse(JSON.stringify(product), {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": `${process.env.ECOMMERCE_STORE_URL}`, // for CORS policy
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
   } catch (err) {
     console.log("[productId_GET]", err);
     return new NextResponse("Internal Server Error", { status: 500 });
