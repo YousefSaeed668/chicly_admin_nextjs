@@ -1,25 +1,29 @@
 import Customer from "@/lib/models/Customer";
 import Order from "@/lib/models/Order";
 import { connectToDB } from "@/lib/mongoDB";
-import { stripe } from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
 
 export const POST = async (req: NextRequest) => {
   try {
     const rawBody = await req.text();
     const signature = req.headers.get("Stripe-Signature") as string;
+
     const event = stripe.webhooks.constructEvent(
       rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
+
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+
       const customerInfo = {
         clerkId: session?.client_reference_id,
         name: session?.customer_details?.name,
         email: session?.customer_details?.email,
       };
+
       const shippingAddress = {
         street: session?.shipping_details?.address?.line1,
         city: session?.shipping_details?.address?.city,
@@ -27,6 +31,7 @@ export const POST = async (req: NextRequest) => {
         postalCode: session?.shipping_details?.address?.postal_code,
         country: session?.shipping_details?.address?.country,
       };
+
       const retrieveSession = await stripe.checkout.sessions.retrieve(
         session.id,
         { expand: ["line_items.data.price.product"] }
@@ -42,6 +47,7 @@ export const POST = async (req: NextRequest) => {
           quantity: item.quantity,
         };
       });
+
       await connectToDB();
 
       const newOrder = new Order({
@@ -53,6 +59,7 @@ export const POST = async (req: NextRequest) => {
       });
 
       await newOrder.save();
+
       let customer = await Customer.findOne({ clerkId: customerInfo.clerkId });
 
       if (customer) {
@@ -66,11 +73,10 @@ export const POST = async (req: NextRequest) => {
 
       await customer.save();
     }
+
     return new NextResponse("Order created", { status: 200 });
   } catch (err) {
     console.log("[webhooks_POST]", err);
-    return new NextResponse("failed to create the order", { status: 500 });
+    return new NextResponse("Failed to create the order", { status: 500 });
   }
 };
-
-export const dynamic = "force-dynamic";

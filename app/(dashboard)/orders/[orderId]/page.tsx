@@ -5,7 +5,12 @@ const OrderDetails = async ({ params }: { params: { orderId: string } }) => {
   const res = await fetch(
     `${process.env.ADMIN_DASHBOARD_URL}/api/orders/${params.orderId}`
   );
-
+  if (!res.ok)
+    return (
+      <div className="flex items-center justify-center text-4xl font-bold sm:text-6xl h-screen">
+        Order not found
+      </div>
+    );
   const { orderDetails, customer } = await res.json();
 
   const { street, city, state, postalCode, country } =
