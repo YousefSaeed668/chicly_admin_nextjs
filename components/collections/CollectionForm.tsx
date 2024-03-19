@@ -68,6 +68,12 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
         },
         body: JSON.stringify(values),
       });
+      if (res.status === 510) {
+        setLoading(false);
+        return toast.error(
+          "View-only mode enabled. any action restricted to the site owner."
+        );
+      }
       if (res.ok) {
         setLoading(false);
         window.location.href = "/collections";

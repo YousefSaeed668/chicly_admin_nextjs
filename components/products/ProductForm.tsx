@@ -119,6 +119,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         method: "POST",
         body: JSON.stringify(values),
       });
+      if (res.status === 510) {
+        setLoading(false);
+        return toast.error(
+          "View-only mode enabled. any action restricted to the site owner."
+        );
+      }
       if (res.ok) {
         setLoading(false);
         toast.success(`Product ${initialData ? "updated" : "created"}`);

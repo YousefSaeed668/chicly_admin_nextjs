@@ -8,11 +8,13 @@ import Product from "@/lib/models/Product";
 export const POST = async (req: NextRequest) => {
   try {
     const { userId } = auth();
-
+    console.log(userId);
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
+    }
     await connectToDB();
 
     const {

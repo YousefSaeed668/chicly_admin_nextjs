@@ -32,7 +32,12 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
       const res = await fetch(`/api/${itemType}/${id}`, {
         method: "DELETE",
       });
-
+      if (res.status === 510) {
+        setLoading(false);
+        return toast.error(
+          "View-only mode enabled. any action restricted to the site owner."
+        );
+      }
       if (res.ok) {
         setLoading(false);
         window.location.href = `/${itemType}`;

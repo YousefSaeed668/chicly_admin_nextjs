@@ -6,7 +6,7 @@ import {
   getTotalCustomers,
   getTotalSales,
 } from "@/lib/actions/actions";
-import { UserButton } from "@clerk/nextjs";
+
 import { CircleDollarSign, ShoppingBag, UserRound } from "lucide-react";
 
 export default async function Home() {
@@ -26,7 +26,7 @@ export default async function Home() {
             <CircleDollarSign className="max-sm:hidden" />
           </CardHeader>
           <CardContent>
-            <p className="text-body-bold">$ {totalRevenue}</p>
+            <p className="text-body-bold">$ {totalRevenue.toFixed(2)}</p>
           </CardContent>
         </Card>
 

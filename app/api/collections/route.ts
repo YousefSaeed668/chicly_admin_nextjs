@@ -6,8 +6,12 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   try {
     const { userId } = auth();
+
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 403 });
+    }
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
     }
     await connectToDB();
     const { title, description, image } = await req.json();

@@ -40,6 +40,9 @@ export const POST = async (
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
+    }
     await connectToDB();
     let collection = await Collection.findById(params.collectionId);
     if (!collection) {
@@ -75,7 +78,9 @@ export const DELETE = async (
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
+    }
     await connectToDB();
     await Collection.findByIdAndDelete(params.collectionId);
     await Product.updateMany(

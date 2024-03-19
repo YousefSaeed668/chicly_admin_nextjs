@@ -47,7 +47,9 @@ export const POST = async (
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
+    }
     await connectToDB();
 
     const product = await Product.findById(params.productId);
@@ -142,7 +144,9 @@ export const DELETE = async (
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
+    if (userId !== process.env.ADMIN_ID) {
+      return new NextResponse("Unauthorized", { status: 510 });
+    }
     await connectToDB();
 
     const product = await Product.findById(params.productId);
