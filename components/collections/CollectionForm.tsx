@@ -54,6 +54,9 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
   };
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (!values.title || !values.description || !values.image) {
+        return toast.error("Please fill all the required fields");
+      }
       setLoading(true);
       const url = initialData
         ? `/api/collections/${initialData._id}`

@@ -1,6 +1,7 @@
 "use client";
 import { columns } from "@/components/collections/CollectionsColumns";
 import { DataTable } from "@/components/custom ui/DataTable";
+import Loader from "@/components/custom ui/Loader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
@@ -26,7 +27,7 @@ const Collections = () => {
   useEffect(() => {
     getCollections();
   }, []);
-
+  if (loading) return <Loader />;
   return (
     <div className="px-10 py-5">
       <div className="flex items-center justify-between gap-3 flex-wrap">

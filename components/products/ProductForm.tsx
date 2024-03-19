@@ -101,6 +101,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (
+        !values.category ||
+        !values.media.length ||
+        !values.title ||
+        !values.description ||
+        !values.price ||
+        !values.expense
+      ) {
+        return toast.error("Please fill all the required fields");
+      }
       setLoading(true);
       const url = initialData
         ? `/api/products/${initialData._id}`

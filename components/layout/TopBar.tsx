@@ -7,13 +7,22 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { navLinks } from "@/lib/constants";
+import { Mina } from "next/font/google";
+const mina = Mina({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 const TopBar = () => {
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const pathname = usePathname();
   return (
     <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 bg-blue-2 shadow-xl lg:hidden">
-      <Image src="/logo.png" alt="logo" width={150} height={70} />
+      <h1
+        className={`text-2xl text-blue-500 font-bold tracking-widest ${mina.className}`}
+      >
+        Chicly
+      </h1>
       <div className="flex  gap-8 max-md:hidden">
         {navLinks.map((link) => (
           <Link
