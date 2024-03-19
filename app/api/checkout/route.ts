@@ -1,5 +1,5 @@
-import { stripe } from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,9 +14,11 @@ export async function OPTIONS() {
 export async function POST(req: NextRequest) {
   try {
     const { cartItems, customer } = await req.json();
+
     if (!cartItems || !customer) {
-      return new NextResponse("Not Enough Data To Checkout", { status: 400 });
+      return new NextResponse("Not enough data to checkout", { status: 400 });
     }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -24,15 +26,8 @@ export async function POST(req: NextRequest) {
         allowed_countries: ["US", "CA"],
       },
       shipping_options: [
-        {
-          shipping_rate: "shr_1OvmnSEazfbWYi3a2yEXGiT2",
-        },
-        {
-          shipping_rate: "shr_1Ovmn3EazfbWYi3aE3ZjbQGB",
-        },
-        {
-          shipping_rate: "shr_1OvmmSEazfbWYi3aTGNKZ181",
-        },
+        { shipping_rate: "shr_1MfufhDgraNiyvtnDGef2uwK" },
+        { shipping_rate: "shr_1OpHFHDgraNiyvtnOY4vDjuY" },
       ],
       line_items: cartItems.map((cartItem: any) => ({
         price_data: {
@@ -53,6 +48,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.ECOMMERCE_STORE_URL}/payment_success`,
       cancel_url: `${process.env.ECOMMERCE_STORE_URL}/cart`,
     });
+
     return NextResponse.json(session, { headers: corsHeaders });
   } catch (err) {
     console.log("[checkout_POST]", err);
